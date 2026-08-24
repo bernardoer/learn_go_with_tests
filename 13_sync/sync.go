@@ -1,10 +1,11 @@
 package sync
 
-import "sync"
+import (
+	"sync/atomic"
+)
 
 type Counter struct {
-	mu    sync.Mutex
-	value int
+	value atomic.Int64
 }
 
 // returns a new counter
@@ -13,11 +14,9 @@ func NewCounter() *Counter {
 }
 
 func (c *Counter) Inc() {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-	c.value++
+	c.value.Add(1)
 }
 
-func (c *Counter) Value() int {
-	return c.value
+func (c *Counter) Value() int64 {
+	return c.value.Load()
 }

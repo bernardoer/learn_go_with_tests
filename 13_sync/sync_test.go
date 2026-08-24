@@ -16,13 +16,13 @@ func TestCounter(t *testing.T) {
 	})
 
 	t.Run("it runs safely concurrently", func(t *testing.T) {
-		wantedCount := 1000
+		wantedCount := int64(1000)
 		counter := NewCounter()
 
 		var wg sync.WaitGroup
-		wg.Add(wantedCount)
+		wg.Add(int(wantedCount))
 
-		for i := 0; i < wantedCount; i++ {
+		for i := int64(0); i < wantedCount; i++ {
 			go func() {
 				counter.Inc()
 				wg.Done()
@@ -34,7 +34,7 @@ func TestCounter(t *testing.T) {
 	})
 }
 
-func assertCounter(t testing.TB, got *Counter, want int) {
+func assertCounter(t testing.TB, got *Counter, want int64) {
 	t.Helper()
 	if got.Value() != want {
 		t.Errorf("got %d, want %d", got.Value(), want)
