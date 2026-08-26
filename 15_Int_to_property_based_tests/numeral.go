@@ -3,8 +3,8 @@ package inttopropertybasedtests
 import "strings"
 
 type RomanNumeral struct {
-	value  int
-	symbol string
+	Value  int
+	Symbol string
 }
 
 var allRomanNumerals = []RomanNumeral{
@@ -28,9 +28,9 @@ func ConvertToRoman(arabic int) string {
 	var result strings.Builder
 
 	for _, numeral := range allRomanNumerals {
-		for arabic >= numeral.value {
-			result.WriteString(numeral.symbol)
-			arabic -= numeral.value
+		for arabic >= numeral.Value {
+			result.WriteString(numeral.Symbol)
+			arabic -= numeral.Value
 		}
 	}
 
@@ -55,4 +55,15 @@ func ConvertToRoman(arabic int) string {
 	// }
 
 	return result.String()
+}
+
+func ConvertToArabic(roman string) int {
+	var arabic = 0
+	for _, numeral := range allRomanNumerals {
+		for strings.HasPrefix(roman, numeral.Symbol) {
+			arabic += numeral.Value
+			roman = strings.TrimPrefix(roman, numeral.Symbol)
+		}
+	}
+	return arabic
 }
