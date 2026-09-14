@@ -1,6 +1,9 @@
 package blogrenderer
 
-import "io"
+import (
+	"fmt"
+	"io"
+)
 
 type Post struct {
 	Title, Description, Body string
@@ -8,5 +11,6 @@ type Post struct {
 }
 
 func Render(w io.Writer, p Post) error {
-	return nil
+	_, err := fmt.Fprintf(w, "<h1>%s</h1>\n<p>%s</p>\nTags: <ul><li>%s</li><li>%s</li></ul>", p.Title, p.Description, p.Tags[0], p.Tags[1])
+	return err
 }
