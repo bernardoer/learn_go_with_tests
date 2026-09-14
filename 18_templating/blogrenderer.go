@@ -2,62 +2,24 @@ package blogrenderer
 
 import (
 	"embed"
+	"html/template"
 	"io"
-	"strings"
-	"text/template"
+
+	"github.com/gomarkdown/markdown"
+	"github.com/gomarkdown/markdown/parser"
 )
-
-// const (
-//
-//	postTemplate = `<h1>{{.Title}}</h1><p>{{.Description}}</p>Tags: <ul>{{range .Tags}}<li>{{.}}</li>{{end}}</ul>`
-//
-// )
-type PostRenderer struct {
-	templ *template.Template
-}
-
-type Post struct {
-	Title, Description, Body string
-	Tags                     []string
-}
 
 var (
 	//go:embed "templates/*"
 	postTemplates embed.FS
 )
 
-type PostViewModel struct {
-	Title, SanitisedTitle, Description, Body string
-	Tags                                     []string
+// PostRenderer renders data into HTML
+type PostRenderer struct {
+	templ *template.Template
 }
 
-func (p Post) SanitisedTitle() string {
-	return strings.ToLower(strings.Replace(p.Title, " ", "-", -1))
-}
-
-func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.SanitiseTitle}}">{{.Title}}</a></li>{{end}}</ol>`
-
-	templ, err := template.New("index").Parse(indexTemplate)
-	if err != nil {
-		return err
-	}
-
-	if err := templ.Execute(w, posts); err != nil {
-		return err
-	}
-	return nil
-}
-
-func Render(w io.Writer, p Post) error {
-	templ, err := template.ParseFS(postTemplates, "templates/*.gohtml")
-	if err != nil {
-		return err
-	}
-
-	return templ.ExecuteTemplate(w, "blog.gohtml", p)
-}
-
+// NewPostRenderer creates a new PostRenderer
 func NewPostRenderer() (*PostRenderer, error) {
 	templ, err := template.ParseFS(postTemplates, "templates/*.gohtml")
 	if err != nil {
@@ -67,6 +29,25 @@ func NewPostRenderer() (*PostRenderer, error) {
 	return &PostRenderer{templ: templ}, nil
 }
 
+// Render renders post into HTML
 func (r *PostRenderer) Render(w io.Writer, p Post) error {
-	return r.templ.ExecuteTemplate(w, "blog.gohtml", p)
+	return r.templ.ExecuteTemplate(w, "blog.gohtml", newPostVM(p))
+}
+
+// RenderIndex creates an HTML index page given a collection of posts
+func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
+	return r.templ.ExecuteTemplate(w, "index.gohtml", posts)
+}
+
+type postViewModel struct {
+	Post
+	HTMLBody template.HTML
+}
+
+func newPostVM(p Post) postViewModel {
+	vm := postViewModel{Post: p}
+	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
+	mdParser := parser.NewWithExtensions(extensions)
+	vm.HTMLBody = template.HTML(markdown.ToHTML([]byte(p.Body), mdParser, nil))
+	return vm
 }

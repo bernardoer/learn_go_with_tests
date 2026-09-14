@@ -1,4 +1,4 @@
-{{define "top"}}<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <title>My amazing blog!</title>
@@ -17,4 +17,15 @@
     </div>
 </nav>
 <main>
-{{end}}
+
+<ol><li><a href="/post/hello-world">Hello World</a></li><li><a href="/post/hello-world-2">Hello World 2</a></li></ol>
+
+</main>
+<footer>
+    <ul>
+        <li><a href="https://twitter.com/quii">Twitter</a></li>
+        <li><a href="https://github.com/quii">GitHub</a></li>
+    </ul>
+</footer>
+</body>
+</html>
