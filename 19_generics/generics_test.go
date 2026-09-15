@@ -1,4 +1,4 @@
-package generics_test
+package generics
 
 import "testing"
 
@@ -16,111 +16,9 @@ func TestAssertFunctinos(t *testing.T) {
 	// AssertEqual(t, 1, "1") // uncomment to see the error
 }
 
-func AssertEqual[T comparable](t *testing.T, got, want T) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got %+v, want %+v", got, want)
-	}
-}
-
-func AssertNotEqual[T comparable](t *testing.T, got, want T) {
-	t.Helper()
-	if got == want {
-		t.Errorf("didn't want %+v", got)
-	}
-}
-
-// stacks LIFO (Last In First Out)
-
-type StackOfInts = Stack
-type StackOfStrings = Stack
-
-type Stack struct {
-	values []interface{}
-}
-
-func (s *Stack) Push(value interface{}) {
-	s.values = append(s.values, value)
-}
-
-func (s *Stack) IsEmpty() bool {
-	return len(s.values) == 0
-}
-
-func (s *Stack) Pop() (interface{}, bool) {
-	if s.IsEmpty() {
-		var zero interface{}
-		return zero, false
-	}
-
-	index := len(s.values) - 1
-	el := s.values[index]
-	s.values = s.values[:index]
-	return el, true
-}
-
-// type StackOfInts struct {
-// 	values []int
-// }
-
-// func (s *StackOfInts) Push(value int) {
-// 	s.values = append(s.values, value)
-// }
-
-// func (s *StackOfInts) IsEmpty() bool {
-// 	return len(s.values) == 0
-// }
-
-// func (s *StackOfInts) Pop() (int, bool) {
-// 	if s.IsEmpty() {
-// 		return 0, false
-// 	}
-
-// 	index := len(s.values) - 1
-// 	el := s.values[index]
-// 	s.values = s.values[:index]
-// 	return el, true
-// }
-
-// type StackOfStrings struct {
-// 	values []string
-// }
-
-// func (s *StackOfStrings) Push(value string) {
-// 	s.values = append(s.values, value)
-// }
-
-// func (s *StackOfStrings) IsEmpty() bool {
-// 	return len(s.values) == 0
-// }
-
-// func (s *StackOfStrings) Pop() (string, bool) {
-// 	if s.IsEmpty() {
-// 		return "", false
-// 	}
-// 	index := len(s.values) - 1
-// 	el := s.values[index]
-// 	s.values = s.values[:index]
-// 	return el, true
-// }
-
-func AssertTrue(t *testing.T, got bool) {
-	t.Helper()
-	if !got {
-		t.Errorf("got %v, want true", got)
-	}
-}
-
-func AssertFalse(t *testing.T, got bool) {
-	t.Helper()
-	if got {
-		t.Errorf("got %v, want false", got)
-	}
-}
-
 func TestStack(t *testing.T) {
 	t.Run("integer stack", func(t *testing.T) {
-		myStackOfInts := new(StackOfInts)
+		myStackOfInts := new(Stack[int])
 		// check if stack is empty
 		AssertTrue(t, myStackOfInts.IsEmpty())
 
@@ -135,10 +33,16 @@ func TestStack(t *testing.T) {
 		value, _ = myStackOfInts.Pop()
 		AssertEqual(t, value, 123)
 		AssertTrue(t, myStackOfInts.IsEmpty())
+
+		myStackOfInts.Push(1)
+		myStackOfInts.Push(2)
+		firstNum, _ := myStackOfInts.Pop()
+		secondNum, _ := myStackOfInts.Pop()
+		AssertEqual(t, firstNum+secondNum, 3)
 	})
 
 	t.Run("string stack", func(t *testing.T) {
-		myStackOfStrings := new(StackOfStrings)
+		myStackOfStrings := new(Stack[string])
 
 		// check stack is empty
 		AssertTrue(t, myStackOfStrings.IsEmpty())
@@ -155,23 +59,5 @@ func TestStack(t *testing.T) {
 		value, _ = myStackOfStrings.Pop()
 		AssertEqual(t, value, "123")
 		AssertTrue(t, myStackOfStrings.IsEmpty())
-	})
-
-	t.Run("interface stack DX is horrid", func(t *testing.T) {
-		myStackOfInts := new(StackOfInts)
-
-		myStackOfInts.Push(1)
-		myStackOfInts.Push(2)
-		firstNum, _ := myStackOfInts.Pop()
-		secondNum, _ := myStackOfInts.Pop()
-
-		// get out int type from out interface{}
-
-		reallyFirstNum, ok := firstNum.(int)
-		AssertTrue(t, ok) // check if it was true (really an int)
-		reallySecondNum, ok := secondNum.(int)
-		AssertTrue(t, ok) // check if it was true (really an int)
-
-		AssertEqual(t, reallyFirstNum+reallySecondNum, 3)
 	})
 }
