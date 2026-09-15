@@ -156,4 +156,22 @@ func TestStack(t *testing.T) {
 		AssertEqual(t, value, "123")
 		AssertTrue(t, myStackOfStrings.IsEmpty())
 	})
+
+	t.Run("interface stack DX is horrid", func(t *testing.T) {
+		myStackOfInts := new(StackOfInts)
+
+		myStackOfInts.Push(1)
+		myStackOfInts.Push(2)
+		firstNum, _ := myStackOfInts.Pop()
+		secondNum, _ := myStackOfInts.Pop()
+
+		// get out int type from out interface{}
+
+		reallyFirstNum, ok := firstNum.(int)
+		AssertTrue(t, ok) // check if it was true (really an int)
+		reallySecondNum, ok := secondNum.(int)
+		AssertTrue(t, ok) // check if it was true (really an int)
+
+		AssertEqual(t, reallyFirstNum+reallySecondNum, 3)
+	})
 }
