@@ -2,7 +2,10 @@ package main_test
 
 import (
 	"context"
+	"fmt"
+	"net/http"
 	"testing"
+	"time"
 
 	go_specs_greet "github.com/bernardoer/learn_go_with_tests/go-specs-greet"
 	"github.com/bernardoer/learn_go_with_tests/go-specs-greet/specifications"
@@ -18,10 +21,10 @@ func TestGreeterServer(t *testing.T) {
 		FromDockerfile: testcontainers.FromDockerfile{
 			Context:    "../../.",
 			Dockerfile: "./cmd/httpserver/Dockerfile",
-			// set false to less spam, helpful when having troubles
+			// set to false if you want less spam, but this is helpful if you're having troubles
 			PrintBuildLog: true,
 		},
-		ExposedPorts: []string{"8080:8080"},
+		ExposedPorts: []string{"8080/tcp"},
 		WaitingFor:   wait.ForHTTP("/").WithPort("8080"),
 	}
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
@@ -33,7 +36,14 @@ func TestGreeterServer(t *testing.T) {
 		assert.NoError(t, container.Terminate(ctx))
 	})
 
-	driver := go_specs_greet.Driver{BaseURL: "http://localhost:8080"}
-	specifications.GreetSpecification(t, driver)
+	client := http.Client{
+		Timeout: 1 * time.Second,
+	}
 
+	mappedPort, err := container.MappedPort(ctx, "8080/tcp")
+	assert.NoError(t, err)
+	baseURL := fmt.Sprintf("http://localhost:%s", mappedPort.Port())
+
+	driver := go_specs_greet.Driver{BaseURL: baseURL, Client: &client}
+	specifications.GreetSpecification(t, driver)
 }
