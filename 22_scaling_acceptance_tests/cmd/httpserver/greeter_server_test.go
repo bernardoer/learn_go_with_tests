@@ -7,7 +7,7 @@ import (
 	"testing"
 	"time"
 
-	go_specs_greet "github.com/bernardoer/learn_go_with_tests/go-specs-greet"
+	httpserver "github.com/bernardoer/learn_go_with_tests/go-specs-greet/adapters"
 	"github.com/bernardoer/learn_go_with_tests/go-specs-greet/specifications"
 	"github.com/quii/go-graceful-shutdown/assert"
 	"github.com/testcontainers/testcontainers-go"
@@ -44,6 +44,6 @@ func TestGreeterServer(t *testing.T) {
 	assert.NoError(t, err)
 	baseURL := fmt.Sprintf("http://localhost:%s", mappedPort.Port())
 
-	driver := go_specs_greet.Driver{BaseURL: baseURL, Client: &client}
+	driver := httpserver.Driver{BaseURL: baseURL, Client: &client}
 	specifications.GreetSpecification(t, driver)
 }
