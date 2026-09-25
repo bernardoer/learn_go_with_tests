@@ -3,7 +3,7 @@ package go_specs_greet_test
 import (
 	"testing"
 
-	gospecsgreet "github.com/bernardoer/learn_go_with_tests/"
+	gospecsgreet "github.com/bernardoer/learn_go_with_tests/go-specs-greet"
 	"github.com/bernardoer/learn_go_with_tests/go-specs-greet/specifications"
 )
 
