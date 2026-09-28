@@ -6,6 +6,7 @@ package grpcserver;
 
 service Greeter {
     rpc Greet (GreetRequest) returns (GreetReply) {}
+    rpc Curse (GreetRequest) returns (GreetReply) {}
 }
 
 message GreetRequest {

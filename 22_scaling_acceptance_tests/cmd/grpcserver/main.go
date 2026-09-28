@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 
@@ -25,6 +26,10 @@ func main() {
 
 type GreetServer struct {
 	grpcserver.UnimplementedGreeterServer
+}
+
+func (g GreetServer) Curse(ctx context.Context, request *grpcserver.GreetRequest) (*grpcserver.GreetReply, error) {
+	return &grpcserver.GreetReply{Message: fmt.Sprintf("Go to hell, %s!", request.Name)}, nil
 }
 
 func (g GreetServer) Greet(ctx context.Context, request *grpcserver.GreetRequest) (*grpcserver.GreetReply, error) {

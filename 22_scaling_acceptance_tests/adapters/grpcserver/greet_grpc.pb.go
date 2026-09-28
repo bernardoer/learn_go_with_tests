@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	Greeter_Greet_FullMethodName = "/grpcserver.Greeter/Greet"
+	Greeter_Curse_FullMethodName = "/grpcserver.Greeter/Curse"
 )
 
 // GreeterClient is the client API for Greeter service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type GreeterClient interface {
 	Greet(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetReply, error)
+	Curse(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetReply, error)
 }
 
 type greeterClient struct {
@@ -47,11 +49,22 @@ func (c *greeterClient) Greet(ctx context.Context, in *GreetRequest, opts ...grp
 	return out, nil
 }
 
+func (c *greeterClient) Curse(ctx context.Context, in *GreetRequest, opts ...grpc.CallOption) (*GreetReply, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GreetReply)
+	err := c.cc.Invoke(ctx, Greeter_Curse_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // GreeterServer is the server API for Greeter service.
 // All implementations must embed UnimplementedGreeterServer
 // for forward compatibility.
 type GreeterServer interface {
 	Greet(context.Context, *GreetRequest) (*GreetReply, error)
+	Curse(context.Context, *GreetRequest) (*GreetReply, error)
 	mustEmbedUnimplementedGreeterServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedGreeterServer struct{}
 
 func (UnimplementedGreeterServer) Greet(context.Context, *GreetRequest) (*GreetReply, error) {
 	return nil, status.Error(codes.Unimplemented, "method Greet not implemented")
+}
+func (UnimplementedGreeterServer) Curse(context.Context, *GreetRequest) (*GreetReply, error) {
+	return nil, status.Error(codes.Unimplemented, "method Curse not implemented")
 }
 func (UnimplementedGreeterServer) mustEmbedUnimplementedGreeterServer() {}
 func (UnimplementedGreeterServer) testEmbeddedByValue()                 {}
@@ -104,6 +120,24 @@ func _Greeter_Greet_Handler(srv interface{}, ctx context.Context, dec func(inter
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Greeter_Curse_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GreetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(GreeterServer).Curse(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Greeter_Curse_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(GreeterServer).Curse(ctx, req.(*GreetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Greeter_ServiceDesc is the grpc.ServiceDesc for Greeter service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var Greeter_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Greet",
 			Handler:    _Greeter_Greet_Handler,
+		},
+		{
+			MethodName: "Curse",
+			Handler:    _Greeter_Curse_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

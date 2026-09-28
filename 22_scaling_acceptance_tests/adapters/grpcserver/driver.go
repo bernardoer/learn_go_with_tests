@@ -42,3 +42,18 @@ func (d *Driver) getClient() (GreeterClient, error) {
 	})
 	return d.client, err
 }
+
+func (d *Driver) Curse(name string) (string, error) {
+	client, err := d.getClient()
+	if err != nil {
+		return "", err
+	}
+
+	greeting, err := client.Curse(context.Background(), &GreetRequest{
+		Name: name,
+	})
+	if err != nil {
+		return "", err
+	}
+	return greeting.Message, nil
+}

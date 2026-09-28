@@ -11,6 +11,9 @@ import (
 )
 
 func TestGreeterServer(t *testing.T) {
+	if testing.Short() {
+		t.Skip()
+	}
 	var (
 		port       = "50051"
 		binToBuild = "grpcserver"
@@ -29,4 +32,5 @@ func TestGreeterServer(t *testing.T) {
 
 	driver := grpcserver.Driver{Addr: fmt.Sprintf("%s:%s", host, mappedPort.Port())}
 	specifications.GreetSpecification(t, &driver)
+	specifications.CurseSpecification(t, &driver)
 }

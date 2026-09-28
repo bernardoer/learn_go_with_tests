@@ -119,9 +119,10 @@ const file_greet_proto_rawDesc = "" +
 	"\x04name\x18\x01 \x01(\tR\x04name\"&\n" +
 	"\n" +
 	"GreetReply\x12\x18\n" +
-	"\amessage\x18\x01 \x01(\tR\amessage2F\n" +
+	"\amessage\x18\x01 \x01(\tR\amessage2\x83\x01\n" +
 	"\aGreeter\x12;\n" +
-	"\x05Greet\x12\x18.grpcserver.GreetRequest\x1a\x16.grpcserver.GreetReply\"\x00B%Z#github.com/quii/adapters/grpcserverb\x06proto3"
+	"\x05Greet\x12\x18.grpcserver.GreetRequest\x1a\x16.grpcserver.GreetReply\"\x00\x12;\n" +
+	"\x05Curse\x12\x18.grpcserver.GreetRequest\x1a\x16.grpcserver.GreetReply\"\x00B%Z#github.com/quii/adapters/grpcserverb\x06proto3"
 
 var (
 	file_greet_proto_rawDescOnce sync.Once
@@ -142,9 +143,11 @@ var file_greet_proto_goTypes = []any{
 }
 var file_greet_proto_depIdxs = []int32{
 	0, // 0: grpcserver.Greeter.Greet:input_type -> grpcserver.GreetRequest
-	1, // 1: grpcserver.Greeter.Greet:output_type -> grpcserver.GreetReply
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
+	0, // 1: grpcserver.Greeter.Curse:input_type -> grpcserver.GreetRequest
+	1, // 2: grpcserver.Greeter.Greet:output_type -> grpcserver.GreetReply
+	1, // 3: grpcserver.Greeter.Curse:output_type -> grpcserver.GreetReply
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
