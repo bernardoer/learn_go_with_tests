@@ -1,10 +1,10 @@
 module github.com/quii/go-specs-greet
 
-go 1.18
+go 1.25.0
 
 require (
 	github.com/alecthomas/assert/v2 v2.11.0
-	github.com/docker/go-connections v0.7.0
+	github.com/docker/go-connections v0.8.1
 	github.com/quii/go-graceful-shutdown v0.6.0
 	github.com/testcontainers/testcontainers-go v0.44.0
 )

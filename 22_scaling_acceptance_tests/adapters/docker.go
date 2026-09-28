@@ -2,12 +2,10 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"testing"
 	"time"
 
 	"github.com/alecthomas/assert/v2"
-	"github.com/docker/go-connections/nat"
 	"github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/wait"
 )
@@ -25,8 +23,9 @@ func StartDockerServer(
 			Dockerfile:    dockerFilePath,
 			PrintBuildLog: true,
 		},
-		ExposedPorts: []string{fmt.Sprintf("%s:%s", port, port)},
-		WaitingFor:   wait.ForListeningPort(nat.Port(port)).WithStartupTimeout(5 * time.Second),
+		// ExposedPorts: []string{fmt.Sprintf("%s:%s", port, port)},
+		ExposedPorts: []string{port},
+		WaitingFor:   wait.ForListeningPort(port).WithStartupTimeout(5 * time.Second),
 	}
 	container, err := testcontainers.GenericContainer(ctx, testcontainers.GenericContainerRequest{
 		ContainerRequest: req,
