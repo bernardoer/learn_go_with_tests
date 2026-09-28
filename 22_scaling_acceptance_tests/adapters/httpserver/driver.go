@@ -11,7 +11,7 @@ type Driver struct {
 }
 
 func (d Driver) Greet(name string) (string, error) {
-	res, err := http.Get(d.BaseURL + "/greet?name=" + name)
+	res, err := d.Client.Get(d.BaseURL + "/greet?name=" + name)
 	if err != nil {
 		return "", err
 	}

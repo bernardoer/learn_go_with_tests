@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/bernardoer/learn_go_with_tests/adapters/httpserver"
+	"github.com/quii/go-specs-greet/adapters/httpserver"
 )
 
 func main() {

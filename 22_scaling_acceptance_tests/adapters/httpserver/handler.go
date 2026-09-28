@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net/http"
 
-	go_specs_greet "github.com/bernardoer/learn_go_with_tests/go-specs-greet"
+	"github.com/quii/go-specs-greet/domain/interactions"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
-	fmt.Fprint(w, go_specs_greet.Greet(name))
+	fmt.Fprint(w, interactions.Greet(name))
 }
