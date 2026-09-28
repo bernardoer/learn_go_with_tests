@@ -12,11 +12,11 @@ import (
 
 func TestGreeterServer(t *testing.T) {
 	var (
-		port           = "50051"
-		dockerFilePath = "./cmd/grpcserver/Dockerfile"
+		port       = "50051"
+		binToBuild = "grpcserver"
 	)
 
-	container := adapters.StartDockerServer(t, port, dockerFilePath)
+	container := adapters.StartDockerServer(t, port, binToBuild)
 	host, err := container.Host(context.Background())
 	if err != nil {
 		t.Fatal(err)
